@@ -1,0 +1,96 @@
+<section class="container my-5">
+
+  <h2 class="fw-bold mb-4">✏ Edit Event</h2>
+
+  <form
+    action="/events/edit/<%= event._id %>"
+    method="POST"
+    enctype="multipart/form-data"
+  >
+
+    <!-- TITLE -->
+    <label class="fw-semibold">Event Title</label>
+    <input
+      type="text"
+      name="title"
+      class="form-control mb-3"
+      value="<%= event.title %>"
+      required
+    />
+
+    <!-- SHORT DESCRIPTION -->
+    <label class="fw-semibold">Short Description</label>
+    <textarea
+      name="shortDescription"
+      class="form-control mb-3"
+      rows="2"
+      required
+    ><%= event.shortDescription %></textarea>
+
+    <!-- DESCRIPTION -->
+    <label class="fw-semibold">Description</label>
+    <textarea
+      name="description"
+      class="form-control mb-3"
+      rows="4"
+      required
+    ><%= event.description %></textarea>
+
+    <!-- ABOUT -->
+    <label class="fw-semibold">About</label>
+    <textarea
+      name="about"
+      class="form-control mb-3"
+      rows="3"
+    ><%= event.about %></textarea>
+
+    <!-- DATES -->
+    <label class="fw-semibold">Start Date</label>
+    <input
+      type="date"
+      name="startDate"
+      class="form-control mb-3"
+      value="<%= event.startDate.toISOString().split('T')[0] %>"
+      required
+    />
+
+    <label class="fw-semibold">End Date</label>
+    <input
+      type="date"
+      name="endDate"
+      class="form-control mb-3"
+      value="<%= event.endDate.toISOString().split('T')[0] %>"
+      required
+    />
+
+    <!-- REGISTRATION (ONLY FOR UPCOMING) -->
+    <% if (event.type === "upcoming") { %>
+      <label class="fw-semibold">Registration Link</label>
+      <input
+        type="url"
+        name="registrationLink"
+        class="form-control mb-3"
+        value="<%= event.registrationLink %>"
+      />
+    <% } %>
+
+    <!-- BANNER REPLACE -->
+    <label class="fw-semibold">Replace Banner (optional)</label>
+    <input
+      type="file"
+      name="bannerImage"
+      class="form-control mb-4"
+      accept="image/*"
+    />
+
+    <button class="btn btn-primary">
+      💾 Save Changes
+    </button>
+
+    <a href="/events/<%= event._id %>" class="btn btn-outline-secondary ms-2">
+      Cancel
+    </a>
+
+  </form>
+
+</section>

@@ -1,0 +1,41 @@
+Folder PATH listing for volume Windows
+Volume serial number is 48C3-D98D
+C:\PROJECTS\AAYAM-COMMITTEE\VIEWS
+|   editMember.ejs
+|   editSection.ejs
+|   events.ejs
+|   home.ejs
+|   team.ejs
+|   
++---admin
+|   |   index.ejs
+|   |   
+|   +---reachout
+|   |       index.ejs
+|   |       
+|   \---users
+|           index.ejs
+|           
++---auth
+|       forgot.ejs
+|       index.ejs
+|       login.ejs
+|       register.ejs
+|       reset.ejs
+|       
++---events
+|       edit.ejs
+|       index.ejs
+|       show.ejs
+|       
++---layouts
+|       main.ejs
+|       
++---partials
+|       footer.ejs
+|       homeSections.ejs
+|       navbar.ejs
+|       
+\---reachout
+        index.ejs
+        
