@@ -60,3 +60,62 @@
     </button>
   </form>
 </section>
+
+<!-- Client Side Image Compression -->
+<script src="https://cdn.jsdelivr.net/npm/browser-image-compression@2.0.1/dist/browser-image-compression.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const editForm = document.querySelector('form[action^="/team/member/edit/"]');
+    if (!editForm) return;
+
+    editForm.addEventListener('submit', async function(e) {
+      const fileInput = editForm.querySelector('input[type="file"]');
+      const file = fileInput.files[0];
+
+      if (!file) return; // No file, nothing to compress
+
+      // Prevent default submission to compress first
+      e.preventDefault();
+      const submitBtn = editForm.querySelector('button[type="submit"]');
+      const originalText = submitBtn.innerHTML;
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '⏳ Compressing Image...';
+
+      try {
+        const options = {
+          maxSizeMB: 1,
+          maxWidthOrHeight: 1024,
+          useWebWorker: true
+        };
+
+        const compressedFile = await imageCompression(file, options);
+        console.log(`Original: ${(file.size / 1024 / 1024).toFixed(2)} MB`);
+        console.log(`Compressed: ${(compressedFile.size / 1024 / 1024).toFixed(2)} MB`);
+
+        // Replace file in input
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(new File([compressedFile], file.name, {
+          type: compressedFile.type,
+          lastModified: Date.now()
+        }));
+        
+        fileInput.files = dataTransfer.files;
+
+        // Submit form
+        submitBtn.innerHTML = '⬆ Uploading...';
+        editForm.submit();
+
+      } catch (error) {
+        console.error('Error compressing image:', error);
+        alert('Failed to compress image. Proceeding with original upload attempt.');
+        editForm.submit(); // Try to submit anyway
+      } finally {
+        // Just in case it fails, re-enable
+        setTimeout(() => {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalText;
+        }, 5000);
+      }
+    });
+  });
+</script>
