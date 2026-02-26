@@ -67,12 +67,14 @@ const homeController = require("./controllers/homeController");
 const eventRoutes = require("./routes/eventRoutes");
 const reachOutRoutes = require("./routes/reachOutRoutes");
 const authRoutes = require("./routes/authRoutes");
+const adminRoutes = require("./routes/adminRoutes");
 
 app.use(homeRoutes);
 app.use(teamRoutes);
 app.use(eventRoutes);
 app.use(reachOutRoutes);
 app.use(authRoutes);
+app.use(adminRoutes);
 
 /* HOME */
 app.get("/", homeController.getHome);
