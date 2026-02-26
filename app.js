@@ -16,6 +16,9 @@ const session = require("express-session");
 ================================ */
 const app = express();
 
+// Trust proxy for Vercel
+app.set("trust proxy", 1);
+
 /* ===============================
    MIDDLEWARES
 ================================ */
@@ -29,6 +32,7 @@ app.use(session({
    saveUninitialized: false,
    cookie: { 
       secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
       maxAge: 24 * 60 * 60 * 1000 // 24 hours
    }
 }));
