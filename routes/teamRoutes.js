@@ -47,5 +47,7 @@ router.post("/team/member/edit/:id", requireAdmin, upload.single("image"), teamC
 // POST /team/section/add - Add new section
 router.post("/team/section/add", requireAdmin, teamController.addSection);
 
-module.exports = router;
+// POST /team/section/delete/:id - Delete section
+router.post("/team/section/delete/:id", requireAdmin, teamController.deleteSection);
 
+module.exports = router;
