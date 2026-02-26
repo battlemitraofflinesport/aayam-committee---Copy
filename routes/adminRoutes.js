@@ -26,4 +26,7 @@ router.get("/admin/users", requireAdmin, adminController.getUsers);
 // GET /admin/reachout - Manage reach out submissions
 router.get("/admin/reachout", requireAdmin, adminController.getReachOut);
 
+// POST /admin/invite - Invite new admin (superadmin only)
+router.post("/admin/invite", requireAdmin, adminController.inviteAdmin);
+
 module.exports = router;
