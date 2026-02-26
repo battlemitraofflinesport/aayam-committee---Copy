@@ -3,10 +3,18 @@
 ================================ */
 const { createClient } = require("@supabase/supabase-js");
 
-// Initialize Supabase client
+// Initialize Supabase client (safe initialization)
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_ANON_KEY;
-const supabase = createClient(supabaseUrl, supabaseKey);
+let supabase = null;
+
+try {
+   if (supabaseUrl && supabaseKey) {
+      supabase = createClient(supabaseUrl, supabaseKey);
+   }
+} catch (err) {
+   console.error("Supabase init error:", err);
+}
 
 /**
  * GET /auth - Render main auth page (login/signup)
@@ -22,6 +30,13 @@ exports.getAuth = (req, res) => {
  * POST /auth/email - Handle email/password login or register
  */
 exports.postEmailAuth = async (req, res) => {
+   if (!supabase) {
+      return res.render("auth/index", { 
+         title: "Login - AAYAM Committee",
+         error: "Authentication service is not configured. Please contact support."
+      });
+   }
+
    const { mode, email, password, name } = req.body;
    
    try {
