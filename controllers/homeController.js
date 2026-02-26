@@ -56,7 +56,7 @@ exports.uploadImage = async (req, res) => {
          const filePath = `${fileName}`;
 
          const { error: uploadError } = await supabase.storage
-            .from("home_images")
+            .from("team_images")
             .upload(filePath, req.file.buffer, {
                contentType: req.file.mimetype,
                upsert: false
@@ -68,7 +68,7 @@ exports.uploadImage = async (req, res) => {
          }
 
          const { data: publicUrlData } = supabase.storage
-            .from("home_images")
+            .from("team_images")
             .getPublicUrl(filePath);
 
          imageUrl = publicUrlData.publicUrl;
