@@ -77,8 +77,13 @@ exports.postEmailAuth = async (req, res) => {
             });
          }
 
-         // Store user session (you may want to use express-session for production)
-         res.locals.user = data.user;
+         // Store user in session
+         req.session.user = {
+            id: data.user.id,
+            email: data.user.email,
+            role: data.user.user_metadata?.role || "user",
+            name: data.user.user_metadata?.full_name || data.user.email
+         };
          
          // Redirect to home or dashboard
          return res.redirect("/");
@@ -122,8 +127,18 @@ exports.getGoogleAuth = async (req, res) => {
  * GET /auth/google/callback - Handle Google OAuth callback
  */
 exports.getGoogleCallback = async (req, res) => {
-   // Supabase handles the callback via URL hash/params
-   // The session is automatically set in the client
+   // Get the session from URL hash (Supabase auth)
+   const { data, error } = await supabase.auth.getSession();
+   
+   if (data?.session?.user) {
+      req.session.user = {
+         id: data.session.user.id,
+         email: data.session.user.email,
+         role: data.session.user.user_metadata?.role || "user",
+         name: data.session.user.user_metadata?.full_name || data.session.user.email
+      };
+   }
+   
    res.redirect("/");
 };
 
@@ -133,10 +148,11 @@ exports.getGoogleCallback = async (req, res) => {
 exports.logout = async (req, res) => {
    try {
       await supabase.auth.signOut();
-      res.locals.user = null;
+      req.session.destroy();
       res.redirect("/");
    } catch (err) {
       console.error("Logout error:", err);
+      req.session.destroy();
       res.redirect("/");
    }
 };
