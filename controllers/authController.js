@@ -77,11 +77,24 @@ exports.postEmailAuth = async (req, res) => {
             });
          }
 
+         // Fetch role from users table
+         let userRole = "user";
+         try {
+            const { data: userData } = await supabase
+               .from("users")
+               .select("role")
+               .eq("email", data.user.email)
+               .single();
+            if (userData?.role) userRole = userData.role;
+         } catch (e) {
+            console.log("Could not fetch role from users table, using default");
+         }
+
          // Store user in session
          req.session.user = {
             id: data.user.id,
             email: data.user.email,
-            role: data.user.user_metadata?.role || "user",
+            role: userRole,
             name: data.user.user_metadata?.full_name || data.user.email
          };
          
@@ -131,10 +144,23 @@ exports.getGoogleCallback = async (req, res) => {
    const { data, error } = await supabase.auth.getSession();
    
    if (data?.session?.user) {
+      // Fetch role from users table
+      let userRole = "user";
+      try {
+         const { data: userData } = await supabase
+            .from("users")
+            .select("role")
+            .eq("email", data.session.user.email)
+            .single();
+         if (userData?.role) userRole = userData.role;
+      } catch (e) {
+         console.log("Could not fetch role from users table, using default");
+      }
+
       req.session.user = {
          id: data.session.user.id,
          email: data.session.user.email,
-         role: data.session.user.user_metadata?.role || "user",
+         role: userRole,
          name: data.session.user.user_metadata?.full_name || data.session.user.email
       };
    }
