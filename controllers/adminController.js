@@ -21,9 +21,16 @@ try {
  */
 exports.getDashboard = async (req, res) => {
    try {
+      let admins = [];
+      if (supabase) {
+         const { data } = await supabase.from("users").select("*");
+         if (data) admins = data;
+      }
+
       res.render("admin/index", {
          title: "Admin Dashboard - AAYAM Committee",
-         user: req.session.user
+         user: req.session.user,
+         admins
       });
    } catch (err) {
       console.error("Dashboard error:", err);
