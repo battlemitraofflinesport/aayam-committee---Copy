@@ -93,22 +93,11 @@ exports.inviteAdmin = async (req, res) => {
       const { email, password } = req.body;
 
       if (!supabase) {
+         console.error("Supabase not initialized - check SUPABASE_SERVICE_ROLE_KEY");
          return res.status(500).send("Database not configured");
       }
 
-      // Create user in Supabase Auth
-      const { data: authData, error: authError } = await supabase.auth.admin.createUser({
-         email,
-         password,
-         email_confirm: true
-      });
-
-      if (authError) {
-         console.error("Auth error:", authError);
-         return res.status(400).send("Failed to create user: " + authError.message);
-      }
-
-      // Add to users table with admin role
+      // First, add to users table
       const { error: dbError } = await supabase.from("users").insert({
          email,
          role: "admin",
@@ -116,13 +105,27 @@ exports.inviteAdmin = async (req, res) => {
       });
 
       if (dbError) {
-         console.error("DB error:", dbError);
-         // Don't fail - auth user is already created
+         console.error("DB insert error:", dbError);
+         return res.status(400).send("Failed to add to users table: " + dbError.message);
+      }
+
+      // Try to create auth user (may fail if user already exists, that's ok)
+      try {
+         const { error: authError } = await supabase.auth.admin.createUser({
+            email,
+            password,
+            email_confirm: true
+         });
+         if (authError) {
+            console.log("Auth user creation error (may already exist):", authError.message);
+         }
+      } catch (authErr) {
+         console.log("Auth user creation failed (may already exist):", authErr.message);
       }
 
       res.redirect("/admin");
    } catch (err) {
       console.error("Invite admin error:", err);
-      res.status(500).send("Error inviting admin");
+      res.status(500).send("Error inviting admin: " + err.message);
    }
 };
