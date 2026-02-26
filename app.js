@@ -50,11 +50,13 @@ const teamRoutes = require("./routes/teamRoutes");
 const homeController = require("./controllers/homeController");
 const eventRoutes = require("./routes/eventRoutes");
 const reachOutRoutes = require("./routes/reachOutRoutes");
+const authRoutes = require("./routes/authRoutes");
 
 app.use(homeRoutes);
 app.use(teamRoutes);
 app.use(eventRoutes);
 app.use(reachOutRoutes);
+app.use(authRoutes);
 
 /* HOME */
 app.get("/", homeController.getHome);
@@ -66,3 +68,4 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
    console.log(`🚀 Server running on port ${PORT}`);
 });
+
