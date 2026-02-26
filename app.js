@@ -9,6 +9,7 @@ const path = require("path");
    VIEW & SESSION PACKAGES
 ================================ */
 const expressLayouts = require("express-ejs-layouts");
+const session = require("express-session");
 
 /* ===============================
    APP INIT
@@ -21,6 +22,17 @@ const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+/* ✅ SESSION */
+app.use(session({
+   secret: process.env.SESSION_SECRET || "aayam-secret-key-change-in-production",
+   resave: false,
+   saveUninitialized: false,
+   cookie: { 
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 24 * 60 * 60 * 1000 // 24 hours
+   }
+}));
+
 /* ✅ STATIC FILES */
 app.use(express.static(path.join(__dirname, "public")));
 
@@ -31,7 +43,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
    GLOBAL USER (NAVBAR ACCESS)
 ================================ */
 app.use((req, res, next) => {
-   res.locals.user = null; // Mock null user for frontend views
+   res.locals.user = req.session.user || null;
    next();
 });
 
@@ -68,4 +80,3 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
    console.log(`🚀 Server running on port ${PORT}`);
 });
-
