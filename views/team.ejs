@@ -120,26 +120,31 @@
           console.log(`Original: ${(file.size / 1024 / 1024).toFixed(2)} MB`);
           console.log(`Compressed: ${(compressedFile.size / 1024 / 1024).toFixed(2)} MB`);
 
-          const dataTransfer = new DataTransfer();
-          dataTransfer.items.add(new File([compressedFile], file.name, {
+          // Create a new File object and update the input
+          const newFile = new File([compressedFile], file.name, {
             type: compressedFile.type,
             lastModified: Date.now()
-          }));
+          });
 
+          const dataTransfer = new DataTransfer();
+          dataTransfer.items.add(newFile);
           fileInput.files = dataTransfer.files;
 
           submitBtn.innerHTML = '⬆ Uploading...';
-          form.submit();
+          
+          // Use actual form submission instead of form.submit()
+          setTimeout(() => {
+            form.removeEventListener('submit', arguments.callee);
+            form.submit();
+          }, 100);
 
         } catch (error) {
           console.error('Error compressing image:', error);
-          alert('Failed to compress image. Proceeding with original upload attempt.');
-          form.submit();
-        } finally {
+          submitBtn.innerHTML = '⬆ Uploading...';
           setTimeout(() => {
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = originalText;
-          }, 5000);
+            form.removeEventListener('submit', arguments.callee);
+            form.submit();
+          }, 100);
         }
       });
     });
