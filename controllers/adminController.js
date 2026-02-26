@@ -79,3 +79,50 @@ exports.getReachOut = async (req, res) => {
       submissions
    });
 };
+
+/**
+ * POST /admin/invite - Invite new admin (superadmin only)
+ */
+exports.inviteAdmin = async (req, res) => {
+   try {
+      // Only superadmin can invite
+      if (req.session.user.role !== "superadmin") {
+         return res.status(403).send("Only superadmin can invite new admins");
+      }
+
+      const { email, password } = req.body;
+
+      if (!supabase) {
+         return res.status(500).send("Database not configured");
+      }
+
+      // Create user in Supabase Auth
+      const { data: authData, error: authError } = await supabase.auth.admin.createUser({
+         email,
+         password,
+         email_confirm: true
+      });
+
+      if (authError) {
+         console.error("Auth error:", authError);
+         return res.status(400).send("Failed to create user: " + authError.message);
+      }
+
+      // Add to users table with admin role
+      const { error: dbError } = await supabase.from("users").insert({
+         email,
+         role: "admin",
+         isActive: true
+      });
+
+      if (dbError) {
+         console.error("DB error:", dbError);
+         // Don't fail - auth user is already created
+      }
+
+      res.redirect("/admin");
+   } catch (err) {
+      console.error("Invite admin error:", err);
+      res.status(500).send("Error inviting admin");
+   }
+};
