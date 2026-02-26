@@ -16,8 +16,8 @@
 
       <% if (user && (user.role==="admin" || user.role==="superadmin" )) { %>
         <div class="text-center mb-4 d-flex gap-2 justify-content-center flex-wrap">
-          <a href="/team/section/edit/<%= section._id %>" class="btn-details">✏ Edit Section</a>
-          <form action="/team/section/delete/<%= section._id %>" method="POST" class="d-inline"
+          <a href="/team/section/edit/<%= section.id %>" class="btn-details">✏ Edit Section</a>
+          <form action="/team/section/delete/<%= section.id %>" method="POST" class="d-inline"
             onsubmit="return confirm('Delete this section and all its members?')">
             <button class="btn-admin-danger">✕ Delete Section</button>
           </form>
@@ -35,11 +35,14 @@
                     <p class="team-member-name">
                       <%= member.name %>
                     </p>
+                    <p class="team-member-position">
+                      <%= member.position %>
+                    </p>
                     <% if (user && (user.role==="admin" || user.role==="superadmin" )) { %>
                       <div class="d-flex gap-2 justify-content-center flex-wrap mt-1">
-                        <a href="/team/member/edit/<%= member._id %>" class="btn-details"
+                        <a href="/team/member/edit/<%= member.id %>" class="btn-details"
                           style="font-size:0.78rem;padding:5px 12px;">✏ Edit</a>
-                        <form action="/team/member/delete/<%= member._id %>" method="POST"
+                        <form action="/team/member/delete/<%= member.id %>" method="POST"
                           onsubmit="return confirm('Delete this member?')">
                           <button class="btn-admin-danger" style="font-size:0.78rem;padding:5px 12px;">✕</button>
                         </form>
@@ -61,8 +64,9 @@
                   Member to this Section</summary>
                 <form action="/team/member/add" method="POST" enctype="multipart/form-data"
                   class="mt-3 add-member-form">
-                  <input type="hidden" name="sectionId" value="<%= section._id %>">
+                  <input type="hidden" name="section_id" value="<%= section.id %>">
                   <input type="text" name="name" placeholder="Member name" class="form-control mb-2" required>
+                  <input type="text" name="position" placeholder="Position/Role" class="form-control mb-2" required>
                   <input type="file" name="image" class="form-control mb-3" accept="image/*" required>
                   <button type="submit" class="btn-register w-100">⬆ Upload Member</button>
                 </form>
