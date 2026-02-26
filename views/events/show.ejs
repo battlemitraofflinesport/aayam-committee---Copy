@@ -2,15 +2,15 @@
 <div class="container my-5">
   <div class="event-detail-content">
 
-    <% if (event.bannerImage) { %>
+    <% if (event.banner_image) { %>
       <div class="event-detail-banner" data-aos="fade-down">
-        <img src="<%= event.bannerImage %>" alt="<%= event.title %>">
+        <img src="<%= event.banner_image %>" alt="<%= event.title %>">
       </div>
     <% } %>
 
     <% if (user && (user.role === "admin" || user.role === "superadmin")) { %>
       <div class="mb-3" data-aos="fade-up">
-        <a href="/events/edit/<%= event._id %>" class="btn-details">✏ Edit Event</a>
+        <a href="/events/edit/<%= event.id %>" class="btn-details">✏ Edit Event</a>
       </div>
     <% } %>
 
@@ -18,12 +18,12 @@
       <h1 style="font-family:var(--font-display);font-size:clamp(1.8rem,4vw,3rem);font-weight:900;color:var(--tx);line-height:1.15;margin-bottom:12px;"><%= event.title %></h1>
 
       <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:20px;">
-        <% if (event.startDate && event.endDate) { %>
+        <% if (event.start_date && event.end_date) { %>
           <span class="event-card-date"><i class="bi bi-calendar3"></i>
-            <% if (new Date(event.startDate).toDateString() === new Date(event.endDate).toDateString()) { %>
-              <%= new Date(event.startDate).toDateString() %>
+            <% if (new Date(event.start_date).toDateString() === new Date(event.end_date).toDateString()) { %>
+              <%= new Date(event.start_date).toDateString() %>
             <% } else { %>
-              <%= new Date(event.startDate).toDateString() %> → <%= new Date(event.endDate).toDateString() %>
+              <%= new Date(event.start_date).toDateString() %> → <%= new Date(event.end_date).toDateString() %>
             <% } %>
           </span>
         <% } %>
@@ -36,9 +36,9 @@
         <p style="font-size:clamp(0.93rem,1.4vw,1.05rem);color:var(--tx-mid);line-height:1.85;"><%= event.about %></p>
       <% } %>
 
-      <% if (!isPast && event.registrationLink) { %>
+      <% if (!isPast && event.registration_link) { %>
         <div class="mt-4">
-          <a href="<%= event.registrationLink %>" target="_blank" class="btn-register" style="padding:13px 30px;font-size:1rem;">
+          <a href="<%= event.registration_link %>" target="_blank" class="btn-register" style="padding:13px 30px;font-size:1rem;">
             <i class="bi bi-pencil-square"></i> Register for Event
           </a>
         </div>
@@ -54,7 +54,7 @@
             <div class="gallery-img-wrap" data-aos="zoom-in" data-aos-delay="<%= i * 50 %>">
               <img src="<%= img %>" alt="Event Image" style="width:100%;height:100%;object-fit:cover;">
               <% if (user && (user.role === "admin" || user.role === "superadmin")) { %>
-                <form action="/events/<%= event._id %>/gallery/<%= i %>/delete" method="POST" class="gallery-delete-form" onsubmit="return confirm('Remove this image?')">
+                <form action="/events/<%= event.id %>/gallery/<%= i %>/delete" method="POST" class="gallery-delete-form" onsubmit="return confirm('Remove this image?')">
                   <button class="gallery-delete-btn"><i class="bi bi-x-lg"></i></button>
                 </form>
               <% } %>
@@ -65,7 +65,7 @@
         <div class="gallery-empty"><div class="gallery-empty-icon">🖼</div><p>No gallery images yet.</p></div>
       <% } %>
       <% if (user && (user.role === "admin" || user.role === "superadmin")) { %>
-        <form action="/events/<%= event._id %>/gallery" method="POST" enctype="multipart/form-data" class="admin-add-form mt-4">
+        <form action="/events/<%= event.id %>/gallery" method="POST" enctype="multipart/form-data" class="admin-add-form mt-4">
           <label class="form-label-custom">Upload Gallery Images</label>
           <input type="file" name="galleryImages" multiple accept="image/*" class="form-control mb-2" required>
           <button class="btn-register">➕ Upload Images</button>
@@ -84,7 +84,7 @@
               <div class="person-email"><%= person.email %></div>
             </div>
             <% if (user && (user.role === "admin" || user.role === "superadmin")) { %>
-              <form action="/events/<%= event._id %>/conducted-by/<%= i %>/delete" method="POST" onsubmit="return confirm('Remove this coordinator?')">
+              <form action="/events/<%= event.id %>/conducted-by/<%= i %>/delete" method="POST" onsubmit="return confirm('Remove this coordinator?')">
                 <button class="btn-admin-danger" style="padding:5px 12px;font-size:0.8rem;">✕</button>
               </form>
             <% } %>
@@ -94,7 +94,7 @@
         <p style="color:var(--tx-muted);font-size:0.92rem;">Coordinator details will be updated.</p>
       <% } %>
       <% if (user && (user.role === "admin" || user.role === "superadmin")) { %>
-        <form action="/events/<%= event._id %>/conducted-by" method="POST" class="admin-add-form mt-3">
+        <form action="/events/<%= event.id %>/conducted-by" method="POST" class="admin-add-form mt-3">
           <div class="row g-2">
             <div class="col-md-5"><input type="text" name="name" class="form-control" placeholder="Coordinator name" required></div>
             <div class="col-md-5"><input type="email" name="email" class="form-control" placeholder="Email address" required></div>
@@ -118,7 +118,7 @@
               <div style="display:flex;gap:8px;align-items:center;">
                 <a href="<%= doc.file %>" target="_blank" class="btn-details" style="font-size:0.82rem;padding:6px 14px;">📄 View</a>
                 <% if (user && (user.role === "admin" || user.role === "superadmin")) { %>
-                  <form action="/events/<%= event._id %>/documents/<%= i %>/delete" method="POST" onsubmit="return confirm('Delete this document?')">
+                  <form action="/events/<%= event.id %>/documents/<%= i %>/delete" method="POST" onsubmit="return confirm('Delete this document?')">
                     <button class="btn-admin-danger" style="padding:5px 12px;font-size:0.8rem;">✕</button>
                   </form>
                 <% } %>
@@ -130,7 +130,7 @@
         <p style="color:var(--tx-muted);font-size:0.92rem;">No documents uploaded yet.</p>
       <% } %>
       <% if (user && (user.role === "admin" || user.role === "superadmin")) { %>
-        <form action="/events/<%= event._id %>/documents" method="POST" enctype="multipart/form-data" class="admin-add-form mt-3">
+        <form action="/events/<%= event.id %>/documents" method="POST" enctype="multipart/form-data" class="admin-add-form mt-3">
           <div class="row g-2">
             <div class="col-md-5"><input type="text" name="title" class="form-control" placeholder="Document title" required></div>
             <div class="col-md-4"><input type="file" name="document" class="form-control" required></div>
@@ -150,7 +150,7 @@
     <% if (isPast) { %>
       <div class="detail-section" data-aos="fade-up">
         <h2 class="detail-section-title">⭐ Event Reviews</h2>
-        <form action="/events/<%= event._id %>/reviews" method="POST" class="admin-add-form mb-4">
+        <form action="/events/<%= event.id %>/reviews" method="POST" class="admin-add-form mb-4">
           <div class="row g-2">
             <div class="col-md-4"><input type="text" name="name" class="form-control" placeholder="Your name" required></div>
             <div class="col-md-6"><textarea name="message" class="form-control" placeholder="Write your review..." rows="2" required></textarea></div>
@@ -165,7 +165,7 @@
             <div class="review-name"><%= review.name %></div>
             <p class="review-body"><%= review.message %></p>
             <% if (user && (user.role === "admin" || user.role === "superadmin")) { %>
-              <form action="/events/<%= event._id %>/reviews/<%= review._id %>/delete" method="POST" class="mt-2" onsubmit="return confirm('Delete review?')">
+              <form action="/events/<%= event.id %>/reviews/<%= review.id %>/delete" method="POST" class="mt-2" onsubmit="return confirm('Delete review?')">
                 <button class="btn-admin-danger" style="padding:5px 12px;font-size:0.8rem;">✕ Delete</button>
               </form>
             <% } %>
@@ -176,3 +176,4 @@
 
   </div>
 </div>
+
