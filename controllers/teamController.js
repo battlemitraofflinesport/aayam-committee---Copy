@@ -51,11 +51,15 @@ const addMember = async (req, res) => {
 
       // Handle image upload to Supabase Storage
       if (req.file) {
+         console.log("Uploading file:", req.file.originalname, "Size:", req.file.size, "Type:", req.file.mimetype);
+         
          const fileExt = req.file.originalname.split('.').pop();
          const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
          const filePath = `${fileName}`;
 
-         const { error: uploadError } = await supabase.storage
+         console.log("Uploading to path:", filePath, "Bucket: team_images");
+
+         const { error: uploadError, data: uploadData } = await supabase.storage
             .from("team_images")
             .upload(filePath, req.file.buffer, {
                contentType: req.file.mimetype,
@@ -63,15 +67,18 @@ const addMember = async (req, res) => {
             });
 
          if (uploadError) {
-            console.error("Supabase storage upload error:", uploadError);
-            return res.status(500).send("Failed to upload image.");
+            console.error("Supabase storage upload error:", JSON.stringify(uploadError));
+            return res.status(500).send("Failed to upload image: " + uploadError.message);
          }
+
+         console.log("Upload successful:", uploadData);
 
          const { data: publicUrlData } = supabase.storage
             .from("team_images")
             .getPublicUrl(filePath);
 
          imageUrl = publicUrlData.publicUrl;
+         console.log("Image URL:", imageUrl);
       }
 
       const { error } = await supabase.from("team_members").insert({
