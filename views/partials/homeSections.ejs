@@ -277,5 +277,20 @@
 
 </div>
 
+<script>
+  // Show selected filename for upload inputs
+  document.getElementById('actFile')?.addEventListener('change', function() {
+    const text = this.closest('.upload-area').querySelector('.upload-text');
+    if (this.files && this.files[0]) {
+      text.innerHTML = 'Selected: <strong>' + this.files[0].name + '</strong> <span class="upload-browse">Change</span>';
+    }
+  });
 
+  document.getElementById('evtFile')?.addEventListener('change', function() {
+    const text = this.closest('.upload-area').querySelector('.upload-text');
+    if (this.files && this.files[0]) {
+      text.innerHTML = 'Selected: <strong>' + this.files[0].name + '</strong> <span class="upload-browse">Change</span>';
+    }
+  });
+</script>
 
