@@ -2,7 +2,7 @@
   <h3 class="text-center mb-4">✏ Edit Team Member</h3>
 
   <form
-    action="/team/member/edit/<%= member._id %>"
+    action="/team/member/edit/<%= member.id %>"
     method="POST"
     enctype="multipart/form-data"
     class="mx-auto"
@@ -19,6 +19,29 @@
         class="form-control"
         required
       />
+    </div>
+
+    <!-- POSITION -->
+    <div class="mb-3">
+      <label class="form-label">Position</label>
+      <input
+        type="text"
+        name="position"
+        value="<%= member.position || '' %>"
+        class="form-control"
+      />
+    </div>
+
+    <!-- SECTION -->
+    <div class="mb-3">
+      <label class="form-label">Section</label>
+      <select name="section_id" class="form-control" required>
+        <% sections.forEach(section => { %>
+          <option value="<%= section.id %>" <%= member.section_id === section.id ? 'selected' : '' %>>
+            <%= section.title %>
+          </option>
+        <% }) %>
+      </select>
     </div>
 
     <!-- MEMBER IMAGE (OPTIONAL) -->
