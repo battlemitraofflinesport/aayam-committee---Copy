@@ -42,16 +42,43 @@ const getTeamPage = async (req, res) => {
 const addMember = async (req, res) => {
    try {
       const { name, position, section_id } = req.body;
-      
+
       if (!supabase) {
          return res.status(500).send("Database not configured");
+      }
+
+      let imageUrl = null;
+
+      // Handle image upload to Supabase Storage
+      if (req.file) {
+         const fileExt = req.file.originalname.split('.').pop();
+         const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+         const filePath = `${fileName}`;
+
+         const { error: uploadError } = await supabase.storage
+            .from("team_images")
+            .upload(filePath, req.file.buffer, {
+               contentType: req.file.mimetype,
+               upsert: false
+            });
+
+         if (uploadError) {
+            console.error("Supabase storage upload error:", uploadError);
+            return res.status(500).send("Failed to upload image.");
+         }
+
+         const { data: publicUrlData } = supabase.storage
+            .from("team_images")
+            .getPublicUrl(filePath);
+
+         imageUrl = publicUrlData.publicUrl;
       }
 
       const { error } = await supabase.from("team_members").insert({
          name,
          position,
          section_id,
-         image: req.file ? "/uploads/" + req.file.filename : null
+         image: imageUrl
       });
 
       if (error) {
@@ -71,7 +98,7 @@ const addMember = async (req, res) => {
 const deleteMember = async (req, res) => {
    try {
       const { id } = req.params;
-      
+
       if (!supabase) {
          return res.status(500).send("Database not configured");
       }
@@ -95,7 +122,7 @@ const deleteMember = async (req, res) => {
 const getEditMember = async (req, res) => {
    try {
       const { id } = req.params;
-      
+
       if (!supabase) {
          return res.status(500).send("Database not configured");
       }
@@ -117,7 +144,7 @@ const editMember = async (req, res) => {
    try {
       const { id } = req.params;
       const { name, position, section_id } = req.body;
-      
+
       if (!supabase) {
          return res.status(500).send("Database not configured");
       }
@@ -129,7 +156,27 @@ const editMember = async (req, res) => {
       };
 
       if (req.file) {
-         updateData.image = "/uploads/" + req.file.filename;
+         const fileExt = req.file.originalname.split('.').pop();
+         const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+         const filePath = `${fileName}`;
+
+         const { error: uploadError } = await supabase.storage
+            .from("team_images")
+            .upload(filePath, req.file.buffer, {
+               contentType: req.file.mimetype,
+               upsert: false
+            });
+
+         if (uploadError) {
+            console.error("Supabase storage upload error:", uploadError);
+            return res.status(500).send("Failed to upload image.");
+         }
+
+         const { data: publicUrlData } = supabase.storage
+            .from("team_images")
+            .getPublicUrl(filePath);
+
+         updateData.image = publicUrlData.publicUrl;
       }
 
       const { error } = await supabase.from("team_members").update(updateData).eq("id", id);
@@ -151,7 +198,7 @@ const editMember = async (req, res) => {
 const addSection = async (req, res) => {
    try {
       const { title } = req.body;
-      
+
       if (!supabase) {
          return res.status(500).send("Database not configured");
       }
