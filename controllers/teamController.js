@@ -107,6 +107,34 @@ const addMember = async (req, res) => {
 };
 
 /**
+ * POST /team/section/delete/:id - Delete team section
+ */
+const deleteSection = async (req, res) => {
+   try {
+      const { id } = req.params;
+
+      if (!supabase) {
+         return res.status(500).send("Database not configured");
+      }
+
+      // First delete all members in this section
+      await supabase.from("team_members").delete().eq("section", id);
+
+      // Then delete the section
+      const { error } = await supabase.from("team_sections").delete().eq("id", id);
+
+      if (error) {
+         return res.status(400).send("Failed to delete section: " + error.message);
+      }
+
+      res.redirect("/team");
+   } catch (err) {
+      console.error("Delete section error:", err);
+      res.status(500).send("Error deleting section");
+   }
+};
+
+/**
  * POST /team/member/delete/:id - Delete team member
  */
 const deleteMember = async (req, res) => {
@@ -236,5 +264,6 @@ module.exports = {
    deleteMember,
    getEditMember,
    editMember,
-   addSection
+   addSection,
+   deleteSection
 };
