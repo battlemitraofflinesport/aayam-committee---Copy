@@ -258,6 +258,55 @@ const addSection = async (req, res) => {
    }
 };
 
+/**
+ * GET /team/section/edit/:id - Edit section page
+ */
+const getEditSection = async (req, res) => {
+   try {
+      const { id } = req.params;
+
+      if (!supabase) {
+         return res.status(500).send("Database not configured");
+      }
+
+      const { data: section } = await supabase.from("team_sections").select("*").eq("id", id).single();
+
+      if (!section) {
+         return res.status(404).send("Section not found");
+      }
+
+      res.render("editSection", { section, user: req.session.user });
+   } catch (err) {
+      console.error("Get edit section error:", err);
+      res.status(500).send("Error loading edit page");
+   }
+};
+
+/**
+ * POST /team/section/edit/:id - Update section
+ */
+const editSection = async (req, res) => {
+   try {
+      const { id } = req.params;
+      const { title } = req.body;
+
+      if (!supabase) {
+         return res.status(500).send("Database not configured");
+      }
+
+      const { error } = await supabase.from("team_sections").update({ title }).eq("id", id);
+
+      if (error) {
+         return res.status(400).send("Failed to update section: " + error.message);
+      }
+
+      res.redirect("/team");
+   } catch (err) {
+      console.error("Edit section error:", err);
+      res.status(500).send("Error updating section");
+   }
+};
+
 module.exports = {
    getTeamPage,
    addMember,
@@ -265,5 +314,7 @@ module.exports = {
    getEditMember,
    editMember,
    addSection,
-   deleteSection
+   deleteSection,
+   getEditSection,
+   editSection
 };
