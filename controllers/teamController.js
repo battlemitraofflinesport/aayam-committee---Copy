@@ -84,7 +84,7 @@ const addMember = async (req, res) => {
       const { error } = await supabase.from("team_members").insert({
          name,
          position,
-         section_id,
+         section: section_id,
          image: imageUrl
       });
 
@@ -159,7 +159,7 @@ const editMember = async (req, res) => {
       const updateData = {
          name,
          position,
-         section_id
+         section: section_id
       };
 
       if (req.file) {
