@@ -24,7 +24,8 @@ const getTeamPage = async (req, res) => {
             sections = sectionsData;
             // Fetch members for each section
             for (let section of sections) {
-               const { data: membersData } = await supabase.from("team_members").select("*").eq("section_id", section.id);
+               const { data: membersData } = await supabase.from("team_members").select("*").eq("section", section.id);
+               console.log(`Section ${section.id} members:`, membersData);
                section.members = membersData || [];
             }
          }
