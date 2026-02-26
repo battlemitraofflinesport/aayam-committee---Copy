@@ -29,9 +29,9 @@ app.use(express.json());
 app.use(session({
    secret: process.env.SESSION_SECRET || "aayam-secret-key-change-in-production",
    resave: false,
-   saveUninitialized: false,
+   saveUninitialized: true,  // Changed to true for debugging
    cookie: { 
-      secure: process.env.NODE_ENV === "production",
+      secure: false,  // Set to false for testing - change to true only with HTTPS
       sameSite: "lax",
       maxAge: 24 * 60 * 60 * 1000 // 24 hours
    }
@@ -48,6 +48,10 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 ================================ */
 app.use((req, res, next) => {
    res.locals.user = req.session.user || null;
+   console.log("=== SESSION DEBUG ===");
+   console.log("Session ID:", req.sessionID);
+   console.log("Session:", req.session);
+   console.log("User:", req.session?.user);
    next();
 });
 
@@ -86,3 +90,4 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
    console.log(`🚀 Server running on port ${PORT}`);
 });
+
