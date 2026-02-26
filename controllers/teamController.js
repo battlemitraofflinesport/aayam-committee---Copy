@@ -41,7 +41,13 @@ const getTeamPage = async (req, res) => {
  */
 const addMember = async (req, res) => {
    try {
+      console.log("=== ADD MEMBER REQUEST ===");
+      console.log("Body:", req.body);
+      console.log("File:", req.file ? req.file.originalname : "No file");
+      console.log("User:", req.session.user);
+      
       const { name, position, section_id } = req.body;
+      console.log("Extracted values:", { name, position, section_id });
 
       if (!supabase) {
          return res.status(500).send("Database not configured");
