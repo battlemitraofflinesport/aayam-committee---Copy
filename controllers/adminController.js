@@ -4,12 +4,13 @@
 const { createClient } = require("@supabase/supabase-js");
 
 const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_ANON_KEY;
+// Use service role key for admin operations (bypasses RLS)
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 let supabase = null;
 
 try {
-   if (supabaseUrl && supabaseKey) {
-      supabase = createClient(supabaseUrl, supabaseKey);
+   if (supabaseUrl && supabaseServiceKey) {
+      supabase = createClient(supabaseUrl, supabaseServiceKey);
    }
 } catch (err) {
    console.error("Supabase init error:", err);
@@ -19,10 +20,15 @@ try {
  * GET /admin - Admin dashboard
  */
 exports.getDashboard = async (req, res) => {
-   res.render("admin/index", {
-      title: "Admin Dashboard - AAYAM Committee",
-      user: req.session.user
-   });
+   try {
+      res.render("admin/index", {
+         title: "Admin Dashboard - AAYAM Committee",
+         user: req.session.user
+      });
+   } catch (err) {
+      console.error("Dashboard error:", err);
+      res.status(500).send("Error loading admin dashboard");
+   }
 };
 
 /**
