@@ -34,5 +34,13 @@ router.post("/events/add", requireAdmin, upload.single("bannerImage"), eventCont
 router.post("/events/delete/:id", requireAdmin, eventController.deleteEvent);
 router.post("/events/move-to-past/:id", requireAdmin, eventController.moveToPast);
 
-module.exports = router;
+// Edit event
+router.get("/events/edit/:id", requireAdmin, eventController.getEditEvent);
+router.post("/events/edit/:id", requireAdmin, upload.single("bannerImage"), eventController.updateEvent);
 
+// Event details management
+router.post("/events/:id/conducted-by", requireAdmin, eventController.addConductedBy);
+router.post("/events/:id/gallery", requireAdmin, upload.single("galleryImage"), eventController.addGalleryImage);
+router.post("/events/:id/documents", requireAdmin, eventController.addDocument);
+
+module.exports = router;
