@@ -100,4 +100,3 @@ router.post("/events/:id/documents", requireAdmin, upload.single("document"), ev
 router.post("/events/:id/documents/:index/delete", requireAdmin, eventController.deleteDocument);
 
 module.exports = router;
-
