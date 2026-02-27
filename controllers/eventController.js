@@ -260,6 +260,37 @@ exports.addConductedBy = async (req, res) => {
 };
 
 /* ===============================
+   DELETE CONDUCTED BY
+================================ */
+exports.deleteConductedBy = async (req, res) => {
+   try {
+      const { id, index } = req.params;
+      
+      if (!supabase) {
+         return res.status(500).send("Database not configured");
+      }
+
+      // Get current conducted_by array
+      const { data: event } = await supabase.from("events").select("conducted_by").eq("id", id).single();
+      const conductedBy = event?.conducted_by || [];
+      
+      // Remove item at index
+      conductedBy.splice(parseInt(index), 1);
+
+      const { error } = await supabase.from("events").update({ conducted_by: conductedBy }).eq("id", id);
+
+      if (error) {
+         return res.status(400).send("Failed to delete conducted by: " + error.message);
+      }
+
+      res.redirect(`/events/${id}`);
+   } catch (err) {
+      console.error("Delete conducted by error:", err);
+      res.status(500).send("Error deleting conducted by");
+   }
+};
+
+/* ===============================
    ADD GALLERY IMAGE
 ================================ */
 exports.addGalleryImage = async (req, res) => {
@@ -403,6 +434,37 @@ exports.addDocument = async (req, res) => {
    } catch (err) {
       console.error("Add document error:", err);
       res.status(500).send("Error adding document");
+   }
+};
+
+/* ===============================
+   DELETE DOCUMENT
+================================ */
+exports.deleteDocument = async (req, res) => {
+   try {
+      const { id, index } = req.params;
+      
+      if (!supabase) {
+         return res.status(500).send("Database not configured");
+      }
+
+      // Get current documents array
+      const { data: event } = await supabase.from("events").select("documents").eq("id", id).single();
+      const documents = event?.documents || [];
+      
+      // Remove item at index
+      documents.splice(parseInt(index), 1);
+
+      const { error } = await supabase.from("events").update({ documents }).eq("id", id);
+
+      if (error) {
+         return res.status(400).send("Failed to delete document: " + error.message);
+      }
+
+      res.redirect(`/events/${id}`);
+   } catch (err) {
+      console.error("Delete document error:", err);
+      res.status(500).send("Error deleting document");
    }
 };
 
