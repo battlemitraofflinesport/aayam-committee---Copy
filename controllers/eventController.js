@@ -314,6 +314,37 @@ exports.addGalleryImage = async (req, res) => {
 };
 
 /* ===============================
+   DELETE GALLERY IMAGE
+================================ */
+exports.deleteGalleryImage = async (req, res) => {
+   try {
+      const { id, index } = req.params;
+      
+      if (!supabase) {
+         return res.status(500).send("Database not configured");
+      }
+
+      // Get current gallery array
+      const { data: event } = await supabase.from("events").select("gallery_images").eq("id", id).single();
+      const galleryImages = event?.gallery_images || [];
+      
+      // Remove image at index
+      galleryImages.splice(parseInt(index), 1);
+
+      const { error } = await supabase.from("events").update({ gallery_images: galleryImages }).eq("id", id);
+
+      if (error) {
+         return res.status(400).send("Failed to delete gallery image: " + error.message);
+      }
+
+      res.redirect(`/events/${id}`);
+   } catch (err) {
+      console.error("Delete gallery image error:", err);
+      res.status(500).send("Error deleting gallery image");
+   }
+};
+
+/* ===============================
    ADD DOCUMENT
 ================================ */
 exports.addDocument = async (req, res) => {
@@ -367,5 +398,3 @@ exports.moveToPast = async (req, res) => {
       res.status(500).send("Error moving event");
    }
 };
-
-
