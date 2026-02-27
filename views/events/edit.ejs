@@ -3,7 +3,7 @@
   <h2 class="fw-bold mb-4">✏ Edit Event</h2>
 
   <form
-    action="/events/edit/<%= event._id %>"
+    action="/events/edit/<%= event.id %>"
     method="POST"
     enctype="multipart/form-data"
   >
@@ -25,7 +25,7 @@
       class="form-control mb-3"
       rows="2"
       required
-    ><%= event.shortDescription %></textarea>
+    ><%= event.short_description %></textarea>
 
     <!-- DESCRIPTION -->
     <label class="fw-semibold">Description</label>
@@ -50,7 +50,7 @@
       type="date"
       name="startDate"
       class="form-control mb-3"
-      value="<%= event.startDate.toISOString().split('T')[0] %>"
+      value="<%= event.start_date ? event.start_date.split('T')[0] : '' %>"
       required
     />
 
@@ -59,7 +59,7 @@
       type="date"
       name="endDate"
       class="form-control mb-3"
-      value="<%= event.endDate.toISOString().split('T')[0] %>"
+      value="<%= event.end_date ? event.end_date.split('T')[0] : '' %>"
       required
     />
 
@@ -70,7 +70,7 @@
         type="url"
         name="registrationLink"
         class="form-control mb-3"
-        value="<%= event.registrationLink %>"
+        value="<%= event.registration_link %>"
       />
     <% } %>
 
@@ -87,7 +87,7 @@
       💾 Save Changes
     </button>
 
-    <a href="/events/<%= event._id %>" class="btn btn-outline-secondary ms-2">
+    <a href="/events/<%= event.id %>" class="btn btn-outline-secondary ms-2">
       Cancel
     </a>
 
