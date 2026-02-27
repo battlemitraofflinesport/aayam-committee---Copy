@@ -295,12 +295,12 @@ exports.addGalleryImage = async (req, res) => {
          .getPublicUrl(filePath);
 
       // Get current gallery array
-      const { data: event } = await supabase.from("events").select("galleryImages").eq("id", id).single();
-      const galleryImages = event?.galleryImages || [];
+      const { data: event } = await supabase.from("events").select("gallery_images").eq("id", id).single();
+      const galleryImages = event?.gallery_images || [];
       
       galleryImages.push(publicUrlData.publicUrl);
 
-      const { error } = await supabase.from("events").update({ galleryImages }).eq("id", id);
+      const { error } = await supabase.from("events").update({ gallery_images: galleryImages }).eq("id", id);
 
       if (error) {
          return res.status(400).send("Failed to add gallery image: " + error.message);
