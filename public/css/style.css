@@ -183,8 +183,7 @@ body.dark-mode .glass-navbar {
   width: 46px; height: 46px;
   border-radius: var(--r-md);
   object-fit: cover;
-  border: 2px solid rgba(210,180,140,0.55);
-  transition: transform 0.5s var(--ease-spring), border-color 0.3s ease;
+  transition: transform 0.5s var(--ease-spring);
   position: relative; z-index: 1;
 }
 .brand-logo-ring {
