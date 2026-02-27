@@ -48,9 +48,9 @@
     <!-- Gallery -->
     <div class="detail-section" data-aos="fade-up">
       <h2 class="detail-section-title">Event Gallery</h2>
-      <% if (event.galleryImages && event.galleryImages.length > 0) { %>
+      <% if (event.gallery_images && event.gallery_images.length > 0) { %>
         <div class="gallery-grid-sm">
-          <% event.galleryImages.forEach((img, i) => { %>
+          <% event.gallery_images.forEach((img, i) => { %>
             <div class="gallery-img-wrap" data-aos="zoom-in" data-aos-delay="<%= i * 50 %>">
               <img src="<%= img %>" alt="Event Image" style="width:100%;height:100%;object-fit:cover;">
               <% if (user && (user.role === "admin" || user.role === "superadmin")) { %>
@@ -176,4 +176,5 @@
 
   </div>
 </div>
+
 
