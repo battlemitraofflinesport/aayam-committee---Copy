@@ -4,6 +4,7 @@
 exports.getReachOutForm = (req, res) => {
   res.render("reachout/index", {
     success: req.query.success || false,
+    user: req.session.user || null
   });
 };
 
