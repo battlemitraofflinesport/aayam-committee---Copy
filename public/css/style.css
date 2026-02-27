@@ -189,8 +189,8 @@ body.dark-mode .glass-navbar {
 
 /* Make Karnavati logo slightly larger */
 .brand-logo[src*="karnavati"] {
-  width: 80px;
-  height: 80px;
+  width: 120px;
+  height: 120px;
 }
 
 .brand-logo-ring {
@@ -1068,4 +1068,5 @@ body.dark-mode .form-select:focus {
   .title-highlight::after { transform: scaleX(1); }
   * { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
 }
+
 
