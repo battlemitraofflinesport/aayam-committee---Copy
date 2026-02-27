@@ -80,6 +80,13 @@ app.use(reachOutRoutes);
 app.use(authRoutes);
 app.use(adminRoutes);
 
+/* ERROR HANDLING */
+app.use((err, req, res, next) => {
+   console.error("=== ERROR ===");
+   console.error(err.stack);
+   res.status(500).send("Internal Server Error: " + err.message);
+});
+
 /* HOME */
 app.get("/", homeController.getHome);
 
@@ -90,4 +97,3 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
    console.log(`🚀 Server running on port ${PORT}`);
 });
-
