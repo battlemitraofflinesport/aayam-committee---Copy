@@ -56,7 +56,7 @@
         <div class="event-card" data-aos="fade-up" data-aos-delay="<%= i * 70 %>">
           <% if (event.banner_image) { %>
             <a href="/events/<%= event.id %>" class="event-card-img-wrap" style="display:block;text-decoration:none;">
-              <img src="<%= event.banner_image %>" class="event-card-img" alt="<%= event.title %>">
+              <img src="/proxy-image?url=<%= encodeURIComponent(event.banner_image) %>" class="event-card-img" alt="<%= event.title %>">
             </a>
           <% } %>
           <div class="event-card-body">
@@ -137,7 +137,7 @@
         <div class="event-card" data-aos="fade-up" data-aos-delay="<%= i * 70 %>">
           <% if (event.banner_image) { %>
             <a href="/events/<%= event.id %>" class="event-card-img-wrap" style="display:block;text-decoration:none;">
-              <img src="<%= event.banner_image %>" class="event-card-img" alt="<%= event.title %>">
+              <img src="/proxy-image?url=<%= encodeURIComponent(event.banner_image) %>" class="event-card-img" alt="<%= event.title %>">
             </a>
           <% } %>
           <div class="event-card-body">
