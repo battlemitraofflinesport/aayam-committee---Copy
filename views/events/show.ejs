@@ -67,7 +67,7 @@
       <% if (user && (user.role === "admin" || user.role === "superadmin")) { %>
         <form action="/events/<%= event.id %>/gallery" method="POST" enctype="multipart/form-data" class="admin-add-form mt-4">
           <label class="form-label-custom">Upload Gallery Images</label>
-          <input type="file" name="galleryImages" multiple accept="image/*" class="form-control mb-2" required>
+          <input type="file" name="galleryImage" multiple accept="image/*" class="form-control mb-2" required>
           <button class="btn-register">➕ Upload Images</button>
         </form>
       <% } %>
