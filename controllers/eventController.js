@@ -344,3 +344,28 @@ exports.addDocument = async (req, res) => {
    }
 };
 
+/* ===============================
+   MOVE EVENT TO PAST
+================================ */
+exports.moveToPast = async (req, res) => {
+   try {
+      const { id } = req.params;
+
+      if (!supabase) {
+         return res.status(500).send("Database not configured");
+      }
+
+      const { error } = await supabase.from("events").update({ type: "past" }).eq("id", id);
+
+      if (error) {
+         return res.status(400).send("Failed to move event: " + error.message);
+      }
+
+      res.redirect("/events");
+   } catch (err) {
+      console.error("Move to past error:", err);
+      res.status(500).send("Error moving event");
+   }
+};
+
+
