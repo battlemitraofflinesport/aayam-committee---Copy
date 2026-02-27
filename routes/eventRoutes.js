@@ -42,6 +42,7 @@ router.post("/events/edit/:id", requireAdmin, upload.single("bannerImage"), even
 router.post("/events/:id/conducted-by", requireAdmin, eventController.addConductedBy);
 router.post("/events/:id/gallery", requireAdmin, upload.single("galleryImage"), eventController.addGalleryImage);
 router.post("/events/:id/gallery/:index/delete", requireAdmin, eventController.deleteGalleryImage);
-router.post("/events/:id/documents", requireAdmin, eventController.addDocument);
+router.post("/events/:id/documents", requireAdmin, upload.single("document"), eventController.addDocument);
 
 module.exports = router;
+
