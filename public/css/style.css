@@ -193,13 +193,13 @@ body.dark-mode .glass-navbar {
   border: 1.5px solid transparent;
   background: linear-gradient(135deg, var(--br), transparent, var(--br-light)) border-box;
   -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: destination-out;
   mask-composite: exclude;
-  opacity: 0;
+  opacity: 1;
   transition: opacity 0.3s ease;
 }
 .nav-brand:hover .brand-logo { transform: scale(1.08) rotate(5deg); border-color: var(--br); }
-.nav-brand:hover .brand-logo-ring { opacity: 1; }
 .brand-text { display: flex; flex-direction: column; line-height: 1; overflow: hidden; }
 .brand-name {
   font-family: var(--font-display);
