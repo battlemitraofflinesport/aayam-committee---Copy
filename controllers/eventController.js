@@ -240,13 +240,13 @@ exports.addConductedBy = async (req, res) => {
          return res.status(500).send("Database not configured");
       }
 
-      // Get current conductedBy array
-      const { data: event } = await supabase.from("events").select("conductedBy").eq("id", id).single();
-      const conductedBy = event?.conductedBy || [];
+      // Get current conducted_by array
+      const { data: event } = await supabase.from("events").select("conducted_by").eq("id", id).single();
+      const conductedBy = event?.conducted_by || [];
       
       conductedBy.push({ name, role, email });
 
-      const { error } = await supabase.from("events").update({ conductedBy }).eq("id", id);
+      const { error } = await supabase.from("events").update({ conducted_by: conductedBy }).eq("id", id);
 
       if (error) {
          return res.status(400).send("Failed to add conducted by: " + error.message);
@@ -350,17 +350,48 @@ exports.deleteGalleryImage = async (req, res) => {
 exports.addDocument = async (req, res) => {
    try {
       const { id } = req.params;
-      const { title: docTitle, url } = req.body;
+      const { title: docTitle, isPublic } = req.body;
       
       if (!supabase) {
          return res.status(500).send("Database not configured");
+      }
+
+      let fileUrl = null;
+
+      // Handle file upload to Supabase Storage
+      if (req.file) {
+         const fileExt = req.file.originalname.split('.').pop();
+         const fileName = `doc-${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+         const filePath = `${fileName}`;
+
+         const { error: uploadError } = await supabase.storage
+            .from("team_images")
+            .upload(filePath, req.file.buffer, {
+               contentType: req.file.mimetype,
+               upsert: false
+            });
+
+         if (uploadError) {
+            console.error("Supabase storage upload error:", uploadError);
+            return res.status(500).send("Failed to upload document: " + uploadError.message);
+         }
+
+         const { data: publicUrlData } = supabase.storage
+            .from("team_images")
+            .getPublicUrl(filePath);
+
+         fileUrl = publicUrlData.publicUrl;
       }
 
       // Get current documents array
       const { data: event } = await supabase.from("events").select("documents").eq("id", id).single();
       const documents = event?.documents || [];
       
-      documents.push({ title: docTitle, url });
+      documents.push({ 
+         title: docTitle, 
+         file: fileUrl,
+         isPublic: isPublic === 'on' || isPublic === true
+      });
 
       const { error } = await supabase.from("events").update({ documents }).eq("id", id);
 
