@@ -76,8 +76,8 @@
     <!-- Conducted By -->
     <div class="detail-section" data-aos="fade-up">
       <h2 class="detail-section-title">Conducted By</h2>
-      <% if (event.conductedBy && event.conductedBy.length > 0) { %>
-        <% event.conductedBy.forEach((person, i) => { %>
+      <% if (event.conducted_by && event.conducted_by.length > 0) { %>
+        <% event.conducted_by.forEach((person, i) => { %>
           <div class="person-item">
             <div>
               <div class="person-name"><%= person.name %></div>
@@ -176,5 +176,4 @@
 
   </div>
 </div>
-
 
