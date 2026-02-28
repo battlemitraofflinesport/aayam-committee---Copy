@@ -4,7 +4,9 @@
 exports.getReachOutForm = (req, res) => {
   res.render("reachout/index", {
     success: req.query.success || false,
-    user: req.session.user || null
+    user: req.session.user || null,
+    upcomingEvents: [],
+    pastEvents: []
   });
 };
 
@@ -15,3 +17,5 @@ exports.submitReachOutForm = (req, res) => {
   // Simply mock successful submission
   res.redirect("/reachout?success=true");
 };
+
+
