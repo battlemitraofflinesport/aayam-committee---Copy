@@ -91,9 +91,16 @@ app.use((err, req, res, next) => {
 app.get("/", homeController.getHome);
 
 /* ===============================
-   SERVER
+   SERVER / VERCEL EXPORT
 ================================ */
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-   console.log(`🚀 Server running on port ${PORT}`);
-});
+
+// For local development
+if (process.env.NODE_ENV !== 'production') {
+   app.listen(PORT, () => {
+      console.log(`🚀 Server running on port ${PORT}`);
+   });
+}
+
+// Export for Vercel serverless
+module.exports = app;
