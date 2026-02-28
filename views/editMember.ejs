@@ -24,20 +24,54 @@
     <!-- POSITION -->
     <div class="mb-3">
       <label class="form-label">Position</label>
-      <input
-        type="text"
-        name="position"
-        value="<%= member.position || '' %>"
-        class="form-control"
-      />
+      <select name="position" class="form-control" id="edit-position" required>
+        <option value="">Select Position...</option>
+        <% sections.forEach(section => { %>
+          <% if (section.id == member.section) { %>
+            <% if (section.title.includes("Organizing Team")) { %>
+              <option value="PRESIDENT" <%= member.position === "PRESIDENT" ? 'selected' : '' %>>PRESIDENT</option>
+              <option value="VICE PRESIDENT" <%= member.position === "VICE PRESIDENT" ? 'selected' : '' %>>VICE PRESIDENT</option>
+            <% } else if (section.title.includes("Management Department")) { %>
+              <option value="CHAIRPERSON" <%= member.position === "CHAIRPERSON" ? 'selected' : '' %>>CHAIRPERSON</option>
+              <option value="VICE CHAIRPERSON" <%= member.position === "VICE CHAIRPERSON" ? 'selected' : '' %>>VICE CHAIRPERSON</option>
+              <option value="SECRETARY" <%= member.position === "SECRETARY" ? 'selected' : '' %>>SECRETARY</option>
+              <option value="VICE SECRETARY" <%= member.position === "VICE SECRETARY" ? 'selected' : '' %>>VICE SECRETARY</option>
+            <% } else if (section.title.includes("Media Department")) { %>
+              <option value="CHAIRPERSON" <%= member.position === "CHAIRPERSON" ? 'selected' : '' %>>CHAIRPERSON</option>
+              <option value="SOCIAL MEDIA HEAD" <%= member.position === "SOCIAL MEDIA HEAD" ? 'selected' : '' %>>SOCIAL MEDIA HEAD</option>
+              <option value="PHOTOGRAPHY HEAD" <%= member.position === "PHOTOGRAPHY HEAD" ? 'selected' : '' %>>PHOTOGRAPHY HEAD</option>
+            <% } else if (section.title.includes("Technical Department")) { %>
+              <option value="CHAIRPERSON" <%= member.position === "CHAIRPERSON" ? 'selected' : '' %>>CHAIRPERSON</option>
+              <option value="CHAIRPERSON" <%= member.position === "CHAIRPERSON" ? 'selected' : '' %>>CHAIRPERSON</option>
+              <option value="SECRETARY" <%= member.position === "SECRETARY" ? 'selected' : '' %>>SECRETARY</option>
+              <option value="DEVELOPER" <%= member.position === "DEVELOPER" ? 'selected' : '' %>>DEVELOPER</option>
+            <% } else if (section.title.includes("Sports Department")) { %>
+              <option value="SPORTS & CULTURAL CHAIRPERSON" <%= member.position === "SPORTS & CULTURAL CHAIRPERSON" ? 'selected' : '' %>>SPORTS & CULTURAL CHAIRPERSON</option>
+              <option value="SPORTS CHAIRPERSON" <%= member.position === "SPORTS CHAIRPERSON" ? 'selected' : '' %>>SPORTS CHAIRPERSON</option>
+              <option value="SPORTS VICE CHAIRPERSON" <%= member.position === "SPORTS VICE CHAIRPERSON" ? 'selected' : '' %>>SPORTS VICE CHAIRPERSON</option>
+              <option value="SPORTS SECRETARY" <%= member.position === "SPORTS SECRETARY" ? 'selected' : '' %>>SPORTS SECRETARY</option>
+            <% } else if (section.title.includes("Cultural Department")) { %>
+              <option value="CULTURAL CHAIRPERSON" <%= member.position === "CULTURAL CHAIRPERSON" ? 'selected' : '' %>>CULTURAL CHAIRPERSON</option>
+              <option value="VICE CHAIRPERSON" <%= member.position === "VICE CHAIRPERSON" ? 'selected' : '' %>>VICE CHAIRPERSON</option>
+            <% } else if (section.title.includes("Discipline Department")) { %>
+              <option value="HEAD" <%= member.position === "HEAD" ? 'selected' : '' %>>HEAD</option>
+              <option value="VICE HEAD" <%= member.position === "VICE HEAD" ? 'selected' : '' %>>VICE HEAD</option>
+              <option value="SECRETARY" <%= member.position === "SECRETARY" ? 'selected' : '' %>>SECRETARY</option>
+              <option value="VICE SECRETARY" <%= member.position === "VICE SECRETARY" ? 'selected' : '' %>>VICE SECRETARY</option>
+            <% } else { %>
+              <option value="MEMBER" <%= member.position === "MEMBER" ? 'selected' : '' %>>MEMBER</option>
+            <% } %>
+          <% } %>
+        <% }) %>
+      </select>
     </div>
 
     <!-- SECTION -->
     <div class="mb-3">
       <label class="form-label">Section</label>
-      <select name="section_id" class="form-control" required>
+      <select name="section_id" class="form-control" id="edit-section" required onchange="updateEditPositions()">
         <% sections.forEach(section => { %>
-          <option value="<%= section.id %>" <%= member.section_id === section.id ? 'selected' : '' %>>
+          <option value="<%= section.id %>" <%= member.section === section.id ? 'selected' : '' %>>
             <%= section.title %>
           </option>
         <% }) %>
@@ -118,4 +152,43 @@
       }
     });
   });
+
+  // Function to update position dropdown based on section
+  function updateEditPositions() {
+    const sectionSelect = document.getElementById('edit-section');
+    const positionSelect = document.getElementById('edit-position');
+    const selectedSection = sectionSelect.options[sectionSelect.selectedIndex].text;
+    
+    let positions = [];
+    
+    if (selectedSection.includes("Organizing Team")) {
+      positions = ["PRESIDENT", "VICE PRESIDENT"];
+    } else if (selectedSection.includes("Management Department")) {
+      positions = ["CHAIRPERSON", "VICE CHAIRPERSON", "SECRETARY", "VICE SECRETARY"];
+    } else if (selectedSection.includes("Media Department")) {
+      positions = ["CHAIRPERSON", "SOCIAL MEDIA HEAD", "PHOTOGRAPHY HEAD"];
+    } else if (selectedSection.includes("Technical Department")) {
+      positions = ["CHAIRPERSON", "CHAIRPERSON", "SECRETARY", "DEVELOPER"];
+    } else if (selectedSection.includes("Sports Department")) {
+      positions = ["SPORTS & CULTURAL CHAIRPERSON", "SPORTS CHAIRPERSON", "SPORTS VICE CHAIRPERSON", "SPORTS SECRETARY"];
+    } else if (selectedSection.includes("Cultural Department")) {
+      positions = ["CULTURAL CHAIRPERSON", "VICE CHAIRPERSON"];
+    } else if (selectedSection.includes("Discipline Department")) {
+      positions = ["HEAD", "VICE HEAD", "SECRETARY", "VICE SECRETARY"];
+    } else {
+      positions = ["MEMBER"];
+    }
+    
+    // Clear current options
+    positionSelect.innerHTML = '<option value="">Select Position...</option>';
+    
+    // Add new options
+    positions.forEach(position => {
+      const option = document.createElement('option');
+      option.value = position;
+      option.textContent = position;
+      positionSelect.appendChild(option);
+    });
+  }
 </script>
+
