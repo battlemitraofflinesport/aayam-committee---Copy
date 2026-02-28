@@ -24,8 +24,38 @@ const getTeamPage = async (req, res) => {
             sections = sectionsData;
             // Fetch members for each section
             for (let section of sections) {
-               const { data: membersData } = await supabase.from("team_members").select("*").eq("section", section.id).order("id", { ascending: true });
+               const { data: membersData } = await supabase.from("team_members").select("*").eq("section", section.id);
                console.log(`Section ${section.id} members:`, membersData);
+               
+               if (membersData) {
+                  // Sort members by position hierarchy
+                  membersData.sort((a, b) => {
+                     const getPositionOrder = (position) => {
+                        const order = {
+                           'PRESIDENT': 1,
+                           'VICE PRESIDENT': 2,
+                           'CHAIRPERSON': 3,
+                           'VICE CHAIRPERSON': 4,
+                           'SPORTS & CULTURAL CHAIRPERSON': 5,
+                           'SPORTS CHAIRPERSON': 6,
+                           'SPORTS VICE CHAIRPERSON': 7,
+                           'CULTURAL CHAIRPERSON': 8,
+                           'SECRETARY': 9,
+                           'SPORTS SECRETARY': 10,
+                           'VICE SECRETARY': 11,
+                           'SOCIAL MEDIA HEAD': 12,
+                           'PHOTOGRAPHY HEAD': 13,
+                           'DEVELOPER': 14,
+                           'HEAD': 15,
+                           'VICE HEAD': 16
+                        };
+                        return order[position] || 999; // Unknown positions go to end
+                     };
+                     
+                     return getPositionOrder(a.position) - getPositionOrder(b.position);
+                  });
+               }
+               
                section.members = membersData || [];
             }
          }
@@ -318,4 +348,3 @@ module.exports = {
    getEditSection,
    editSection
 };
-
