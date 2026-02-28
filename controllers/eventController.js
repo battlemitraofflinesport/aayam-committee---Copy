@@ -25,6 +25,13 @@ exports.getEventsPage = async (req, res) => {
          if (events) {
             upcomingEvents = events.filter(e => e.type === "upcoming");
             pastEvents = events.filter(e => e.type === "past");
+            
+            // Custom sort: INFERNO 3.0 first, then others
+            upcomingEvents.sort((a, b) => {
+               if (a.title.includes("INFERNO") && !b.title.includes("INFERNO")) return -1;
+               if (!a.title.includes("INFERNO") && b.title.includes("INFERNO")) return 1;
+               return 0;
+            });
          }
       }
    } catch (err) {
