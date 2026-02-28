@@ -54,6 +54,13 @@ const getTeamPage = async (req, res) => {
                      
                      return getPositionOrder(a.position) - getPositionOrder(b.position);
                   });
+                  
+                  // Compress positions - remove gaps when positions are missing
+                  let compressedIndex = 1;
+                  membersData.forEach(member => {
+                     member.displayOrder = compressedIndex;
+                     compressedIndex++;
+                  });
                }
                
                section.members = membersData || [];
@@ -348,3 +355,4 @@ module.exports = {
    getEditSection,
    editSection
 };
+
