@@ -59,7 +59,6 @@ app.use((req, res, next) => {
    EJS + LAYOUT SETUP
 ================================ */
 app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views"));
 app.use(expressLayouts);
 app.set("layout", "layouts/main");
 
@@ -92,16 +91,9 @@ app.use((err, req, res, next) => {
 app.get("/", homeController.getHome);
 
 /* ===============================
-   SERVER / VERCEL EXPORT
+   SERVER
 ================================ */
 const PORT = process.env.PORT || 3000;
-
-// For local development
-if (process.env.NODE_ENV !== 'production') {
-   app.listen(PORT, () => {
-      console.log(`🚀 Server running on port ${PORT}`);
-   });
-}
-
-// Export for Vercel serverless
-module.exports = app;
+app.listen(PORT, () => {
+   console.log(`🚀 Server running on port ${PORT}`);
+});
